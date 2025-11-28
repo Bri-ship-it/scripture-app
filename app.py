@@ -145,4 +145,4 @@ st.markdown("<br>", unsafe_allow_html=True)
 cols = st.columns([1, 2, 1])
 with cols[1]:
     if st.button("✨ Get Another Verse"):
-        st.experimental_rerun()
+        st.rerun()
