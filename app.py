@@ -117,7 +117,7 @@ def load_random_verse():
     st.session_state.verse_text = fetch_verse(choice["verse"])
 
 # --- TITLE ---
-st.title("✨ Daily Message")
+st.title("✨ Spread the message:")
 
 # --- INITIAL LOAD ---
 if "ref" not in st.session_state:
