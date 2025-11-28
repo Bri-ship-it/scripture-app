@@ -99,7 +99,6 @@ verses += [
     # Perseverance / Endurance
     {"verse": "Galatians 6:9", "message": "🌾 Don’t grow weary in doing good—harvest is coming."},
     {"verse": "2 Corinthians 4:16", "message": "🔥 Though outwardly we waste away, inwardly we are renewed daily."}
-
 ]
 
 # --- Fetch Bible verse text ---
@@ -110,39 +109,36 @@ def fetch_verse(reference, translation="kjv"):
         return r.json()["text"].strip()
     return "(Verse not found)"
 
-# --- Auto-generate a random verse function ---
-def get_random_verse():
+# --- Auto-generate a random verse once ---
+def load_random_verse():
     choice = random.choice(verses)
-    ref = choice["verse"]
-    msg = choice["message"]
-    verse_text = fetch_verse(ref)
-    return ref, verse_text, msg
+    st.session_state.ref = choice["verse"]
+    st.session_state.msg = choice["message"]
+    st.session_state.verse_text = fetch_verse(choice["verse"])
 
-# --- TITLE CHANGE ---
+# --- TITLE ---
 st.title("✨ Daily Message")
 
-# --- AUTO LOAD VERSE ON PAGE LOAD ---
-if "loaded" not in st.session_state:
-    st.session_state.loaded = True
-    ref, verse_text, msg = get_random_verse()
-else:
-    ref, verse_text, msg = get_random_verse()
+# --- INITIAL LOAD ---
+if "ref" not in st.session_state:
+    load_random_verse()
 
-# --- VERSE CARD ---
+# --- DISPLAY VERSE CARD ---
 st.markdown(
     f"""
     <div style="background-color:black;color:white;padding:30px;border-radius:15px;text-align:center;">
-        <h2>{ref} (KJV)</h2>
-        <p style="font-size:20px;">{verse_text}</p>
-        <p style="font-size:18px;"><i>{msg}</i></p>
+        <h2>{st.session_state.ref} (KJV)</h2>
+        <p style="font-size:20px;">{st.session_state.verse_text}</p>
+        <p style="font-size:18px;"><i>{st.session_state.msg}</i></p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# --- BUTTON BELOW VERSE ---
+# --- BUTTON (CENTERED) ---
 st.markdown("<br>", unsafe_allow_html=True)
 cols = st.columns([1, 2, 1])
 with cols[1]:
     if st.button("✨ Get Another Verse"):
+        load_random_verse()
         st.rerun()
